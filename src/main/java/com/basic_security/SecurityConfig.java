@@ -28,22 +28,8 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
-                .formLogin(form -> form
-//                        .loginPage("/loginPage")
-                        .loginProcessingUrl("/loginProc")
-                        .defaultSuccessUrl("/", true) //authentication success handler 를 사용 즉 밑에 커스터마이징한 successHandler 가 더 우선시 됨
-                        .failureUrl("/failed") //failureHandler 또한 동일
-                        .usernameParameter("username")
-                        .passwordParameter("password")
-                        .successHandler((request, response, authentication) -> {
-                            System.out.println("authentication: " + authentication);
-                            response.sendRedirect("/home");
-                        })
-                        .failureHandler((request, response, exception) -> {
-                            System.out.println("exception: " + exception);
-                            response.sendRedirect("/loginPage");
-                        })
-                        .permitAll()
+                .httpBasic(basic -> basic
+                        .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
                 );
         return http.build();
     }
