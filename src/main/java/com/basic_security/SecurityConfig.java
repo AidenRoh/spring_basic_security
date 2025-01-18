@@ -21,7 +21,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
                 .formLogin(Customizer.withDefaults())
                 .rememberMe(rememberMe -> rememberMe
-                        .alwaysRemember(true)
+                        .alwaysRemember(false)
                         .tokenValiditySeconds(3600)
                         .userDetailsService(userDetailsService())
                         .rememberMeParameter("remember")
