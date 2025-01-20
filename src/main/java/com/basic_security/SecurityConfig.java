@@ -41,7 +41,6 @@ public class SecurityConfig {
                         .anyRequest().authenticated())
                 .formLogin(form -> form
                         .successHandler(new AuthenticationSuccessHandler() {
-
                             @Override
                             public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
                                 SavedRequest savedRequest = requestCache.getRequest(request, response);
