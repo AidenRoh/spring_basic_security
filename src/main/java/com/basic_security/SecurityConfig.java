@@ -5,7 +5,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.Authentication;
@@ -26,25 +28,18 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
+        AuthenticationManagerBuilder builder = http.getSharedObject(AuthenticationManagerBuilder.class);
+        builder.authenticationProvider(new CustomAuthenticationProvider());
+        builder.authenticationProvider(new CustomAuthenticationProvider2());
+
         http
-                .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
-                .formLogin(form -> form
-//                        .loginPage("/loginPage")
-                        .loginProcessingUrl("/loginProc")
-                        .defaultSuccessUrl("/", true) //authentication success handler 를 사용 즉 밑에 커스터마이징한 successHandler 가 더 우선시 됨
-                        .failureUrl("/failed") //failureHandler 또한 동일
-                        .usernameParameter("username")
-                        .passwordParameter("password")
-                        .successHandler((request, response, authentication) -> {
-                            System.out.println("authentication: " + authentication);
-                            response.sendRedirect("/home");
-                        })
-                        .failureHandler((request, response, exception) -> {
-                            System.out.println("exception: " + exception);
-                            response.sendRedirect("/loginPage");
-                        })
-                        .permitAll()
-                );
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/").permitAll()
+                        .anyRequest().authenticated())
+//                .authenticationProvider(new CustomAuthenticationProvider())
+//                .authenticationProvider(new CustomAuthenticationProvider2())
+        ;
         return http.build();
     }
 
