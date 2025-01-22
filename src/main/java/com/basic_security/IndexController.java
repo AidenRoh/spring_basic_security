@@ -1,10 +1,20 @@
 package com.basic_security;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequiredArgsConstructor
 public class IndexController {
+
+    private final SessionInfoService sessionInfoService;
+
+    @GetMapping("sessionInfo")
+    public String sesionInfo() {
+        sessionInfoService.sessionInfo();
+        return "sessionInfo";
+    }
 
     @GetMapping("/")
     public String index() {
