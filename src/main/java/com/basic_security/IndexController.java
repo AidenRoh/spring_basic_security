@@ -31,6 +31,14 @@ public class IndexController {
         return "home";
     }
 
+    @GetMapping("/login")
+    public String login() {
+        return "login";
+    }
 
+    @GetMapping("/dined")
+    public String dined() {
+        return "dined";
+    }
 
 }
