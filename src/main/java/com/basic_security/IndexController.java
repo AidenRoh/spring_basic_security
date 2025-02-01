@@ -2,6 +2,7 @@ package com.basic_security;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -39,6 +40,11 @@ public class IndexController {
     @GetMapping("/dined")
     public String dined() {
         return "dined";
+    }
+
+    @PostMapping("/csrf")
+    public String csrf() {
+        return "csrf applied";
     }
 
 }

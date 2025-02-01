@@ -33,25 +33,11 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login", "GET").permitAll()
+                        .requestMatchers("/csrf").permitAll()
                         .anyRequest().authenticated())
                 .formLogin(Customizer.withDefaults())
-                .exceptionHandling(exception -> exception
-                        .authenticationEntryPoint(new AuthenticationEntryPoint() {
-                            @Override
-                            public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
-                                System.out.println("exception: " + authException.getMessage());
-                                response.sendRedirect("/login");
-                            }
-                        })
-                        .accessDeniedHandler(new AccessDeniedHandler() {
-                            @Override
-                            public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
-                                System.out.println("accessDenied: " + accessDeniedException.getMessage());
-                                response.sendRedirect("/login");
-                            }
-                        })
-                )
+                .csrf(csrf -> csrf
+                        .ignoringRequestMatchers("/csrf"))
         ;
         return http.build();
     }
