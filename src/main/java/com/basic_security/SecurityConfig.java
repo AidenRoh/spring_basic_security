@@ -22,6 +22,7 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 import java.io.IOException;
 
@@ -31,12 +32,15 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
+        CookieCsrfTokenRepository repository = new CookieCsrfTokenRepository();
         http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/csrf").permitAll()
                         .anyRequest().authenticated())
                 .formLogin(Customizer.withDefaults())
                 .csrf(csrf -> csrf
+                        .csrfTokenRepository(repository)
                         .ignoringRequestMatchers("/csrf"))
         ;
         return http.build();
