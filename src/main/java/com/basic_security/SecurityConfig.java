@@ -32,15 +32,14 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-
-        CookieCsrfTokenRepository repository = new CookieCsrfTokenRepository();
+//        CookieCsrfTokenRepository repository = new CookieCsrfTokenRepository();
         http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/csrf").permitAll()
                         .anyRequest().authenticated())
                 .formLogin(Customizer.withDefaults())
                 .csrf(csrf -> csrf
-                        .csrfTokenRepository(repository)
+                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                         .ignoringRequestMatchers("/csrf"))
         ;
         return http.build();
